@@ -69,334 +69,170 @@ if "sidebar_visible" not in st.session_state:
 # ------------------------------------------------------------------------------
 
 def apply_enhanced_shaders():
+    """Enhanced CSS with light/dark mode support, smooth transitions, and sidebar toggle"""
+
+    # Sync theme state
     st.session_state.theme_modfe = st.session_state.theme_mode
-    """Enhanced CSS with light/dark mode support and sidebar toggle"""
-    
-    # Define color schemes
+
+    # ======================
+    # 🎨 COLOR SCHEMES
+    # ======================
     if st.session_state.theme_modfe == "dark":
-        bg_primary = "#0b1120"
-        bg_secondary = "#1a1f3a"
-        bg_tertiary = "#1e293b"
-        text_primary = "#e8edf4"
-        text_secondary = "#b4bdd0"
-        border_color = "rgba(56, 189, 248, 0.2)"
-        input_bg = "rgba(30, 41, 59, 0.6)"
-        sidebar_bg = "rgba(2, 6, 23, 0.8)"
-        chat_bg = "rgba(30, 41, 59, 0.4)"
-        prompt_area_bg = "#0a0f1a"
-    else:
-        bg_primary = "#f8fafc"
-        bg_secondary = "#e2e8f0"
-        bg_tertiary = "#cbd5e1"
-        text_primary = "#0f172a"
-        text_secondary = "#475569"
-        border_color = "rgba(14, 165, 233, 0.3)"
-        input_bg = "rgba(255, 255, 255, 0.9)"
-        sidebar_bg = "rgba(241, 245, 249, 0.9)"
-        chat_bg = "rgba(241, 245, 249, 0.6)"
-        prompt_area_bg = "#ffffff"
-    
-    # Add JavaScript for sidebar control - FIXED VERSION
-    sidebar_script = """
-    <script>
-    let sidebarVisible = true;
-
-    function toggleSidebar() {
-        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
-        const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-
-        if (!sidebar) return;
-
-        if (sidebarVisible) {
-            sidebar.style.transform = 'translateX(-105%)';
-            sidebar.style.transition = 'transform 0.3s ease';
-            if (main) main.style.marginLeft = '0px';
-            sidebarVisible = false;
-        } else {
-            sidebar.style.transform = 'translateX(0)';
-            sidebar.style.transition = 'transform 0.3s ease';
-            if (main) main.style.marginLeft = '300px';
-            sidebarVisible = true;
+        colors = {
+            "bg_primary": "#0b1120",
+            "bg_secondary": "#1a1f3a",
+            "bg_tertiary": "#1e293b",
+            "text_primary": "#e8edf4",
+            "text_secondary": "#b4bdd0",
+            "border": "rgba(56, 189, 248, 0.2)",
+            "input_bg": "rgba(30, 41, 59, 0.6)",
+            "sidebar_bg": "rgba(2, 6, 23, 0.8)",
+            "chat_bg": "rgba(30, 41, 59, 0.4)",
+            "prompt_bg": "#0a0f1a",
         }
-    }
-    </script>
-    """
-    components.html(sidebar_script, height=0)
+    else:
+        colors = {
+            "bg_primary": "#f8fafc",
+            "bg_secondary": "#e2e8f0",
+            "bg_tertiary": "#cbd5e1",
+            "text_primary": "#0f172a",
+            "text_secondary": "#475569",
+            "border": "rgba(14, 165, 233, 0.3)",
+            "input_bg": "rgba(255, 255, 255, 0.9)",
+            "sidebar_bg": "rgba(241, 245, 249, 0.9)",
+            "chat_bg": "rgba(241, 245, 249, 0.6)",
+            "prompt_bg": "#ffffff",
+        }
 
-    
-    shader_css = f"""
-    <style>
+    # ======================
+    # 📜 SIDEBAR JS (UNCHANGED)
+    # ======================
+    components.html(
+        """
+        <script>
+        let sidebarVisible = true;
+
+        function toggleSidebar() {
+            const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+            const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+
+            if (!sidebar) return;
+
+            if (sidebarVisible) {
+                sidebar.style.transform = 'translateX(-105%)';
+                sidebar.style.transition = 'transform 0.3s ease';
+                if (main) main.style.marginLeft = '0px';
+                sidebarVisible = false;
+            } else {
+                sidebar.style.transform = 'translateX(0)';
+                sidebar.style.transition = 'transform 0.3s ease';
+                if (main) main.style.marginLeft = '300px';
+                sidebarVisible = true;
+            }
+        }
+        </script>
+        """,
+        height=0,
+    )
+
+    # ======================
+    # 🎨 CSS (CLEAN + ANIMATED)
+    # ======================
+    st.markdown(
+        f"""
+        <style>
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
-        
-        /* Menu Button Styling */
-        .menu-toggle-btn {{
-            position: fixed !important;
-            top: 20px !important;
-            left: 20px !important;
-            z-index: 999999 !important;
-            background: linear-gradient(135deg, {bg_tertiary} 0%, {bg_secondary} 100%) !important;
-            border: 1px solid {border_color} !important;
-            border-radius: 12px !important;
-            padding: 10px 15px !important;
-            cursor: pointer !important;
-            color: {text_primary} !important;
-            font-weight: 700 !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-            transition: all 0.3s ease !important;
+
+        /* 🌗 THEME VARIABLES */
+        :root {{
+            --bg-primary: {colors["bg_primary"]};
+            --bg-secondary: {colors["bg_secondary"]};
+            --bg-tertiary: {colors["bg_tertiary"]};
+            --text-primary: {colors["text_primary"]};
+            --text-secondary: {colors["text_secondary"]};
+            --border: {colors["border"]};
+            --input-bg: {colors["input_bg"]};
+            --sidebar-bg: {colors["sidebar_bg"]};
+            --chat-bg: {colors["chat_bg"]};
+            --prompt-bg: {colors["prompt_bg"]};
         }}
-        
-        .menu-toggle-btn:hover {{
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
-            border-color: #38bdf8 !important;
-        }}
-        
-        /* Theme Toggle Button */
-        .theme-toggle {{
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999999;
-            background: linear-gradient(135deg, {bg_tertiary} 0%, {bg_secondary} 100%);
-            border: 1px solid {border_color};
-            border-radius: 25px;
-            padding: 8px 18px;
-            cursor: pointer;
-            color: {text_primary};
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }}
-        
-        .theme-toggle:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }}
-        
-        /* Global Styles */
-        * {{ 
-            transition: background-color 0.3s ease, color 0.3s ease !important; 
+
+        /* ✨ SMOOTH THEME TRANSITIONS */
+        * {{
+            transition:
+                background-color 0.35s ease,
+                color 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
             font-family: 'Crimson Pro', Georgia, serif;
             -webkit-font-smoothing: antialiased;
         }}
-        
-        /* Main Application */
-        .stApp {{ 
-            background: linear-gradient(135deg, {bg_primary} 0%, {bg_secondary} 50%, {bg_primary} 100%) !important;
-            background-size: 200% 200% !important;
-            color: {text_primary} !important; 
+
+        /* MAIN APP */
+        .stApp {{
+            background: linear-gradient(
+                135deg,
+                var(--bg-primary),
+                var(--bg-secondary),
+                var(--bg-primary)
+            ) !important;
+            color: var(--text-primary) !important;
         }}
-        
-        /* Sidebar */
+
+        /* SIDEBAR */
         [data-testid="stSidebar"] {{
-            background: {sidebar_bg} !important; 
-            backdrop-filter: blur(20px) !important;
-            border-right: 1px solid {border_color} !important;
-            box-shadow: 12px 0 40px rgba(0, 0, 0, 0.3) !important;
+            background: var(--sidebar-bg) !important;
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
         }}
-        
-        /* Chat Messages */
+
+        /* CHAT */
         .stChatMessage {{
-            border-radius: 16px !important;
-            padding: 2rem !important;
-            margin-bottom: 2rem !important;
-            border: 1px solid {border_color} !important;
-            background: {chat_bg} !important;
-            backdrop-filter: blur(10px) !important;
+            background: var(--chat-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
         }}
-        
-        [data-testid="stChatMessageUser"] {{
-            border-left: 4px solid #38bdf8 !important;
+
+        /* INPUTS */
+        input, textarea {{
+            background: var(--input-bg) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px;
         }}
-        
-        [data-testid="stChatMessageAssistant"] {{
-            border-left: 4px solid #ef4444 !important;
-        }}
-        
-        /* Typography */
-        h1, h2, h3, h4 {{ 
-            color: {text_primary} !important; 
-            font-weight: 700 !important; 
-        }}
-        
-        p, span, div {{
-            color: {text_primary} !important;
-        }}
-        
-        .logo-text {{
-            color: {text_primary};
-            font-size: 32px;
-            font-weight: 900;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-            font-family: 'Space Mono', monospace !important;
-        }}
-        
-        .sub-logo-text {{
-            color: {text_secondary};
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-family: 'Space Mono', monospace !important;
-        }}
-        
-        /* Buttons */
-        .stButton>button {{
-            border-radius: 12px !important;
-            font-weight: 700 !important;
-            background: {bg_tertiary} !important;
-            color: {text_primary} !important;
-            border: 1px solid {border_color} !important;
-            height: 3.5rem !important;
-            width: 100% !important;
-        }}
-        
-        .stButton>button:hover {{
-            border-color: #38bdf8 !important;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3) !important;
-        }}
-        
-        /* Input Fields */
-        .stTextInput>div>div>input,
-        .stTextArea>div>div>textarea {{
-            background: {input_bg} !important;
-            color: {text_primary} !important;
-            border: 1px solid {border_color} !important;
-            border-radius: 12px !important;
-            padding: 14px 18px !important;
-        }}
-        
-        .stTextInput>div>div>input:focus,
-        .stTextArea>div>div>textarea:focus {{
-            border-color: #38bdf8 !important;
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2) !important;
-        }}
-        
-        /* Chat Input Container */
+
+        /* PROMPT BAR */
         .stChatInputContainer {{
-            background: {prompt_area_bg} !important;
-            backdrop-filter: blur(10px) !important;
-            border-top: 1px solid {border_color} !important;
-            padding: 20px !important;
-            position: relative !important;
+            background: var(--prompt-bg);
+            border-top: 1px solid var(--border);
         }}
-        
-        /* Chat Input Field - with space for mic button */
-        .stChatInput>div>div>textarea {{
-            background: {input_bg} !important;
-            color: {text_primary} !important;
-            border: 1px solid {border_color} !important;
-            border-radius: 12px !important;
-            padding: 14px 60px 14px 18px !important;
-            min-height: 60px !important;
-            font-size: 15px !important;
+
+        /* BUTTONS */
+        .stButton>button {{
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 700;
         }}
-        
-        /* Microphone Button - INSIDE PROMPT BAR - ENHANCED BEAUTIFUL VERSION */
-        .mic-in-prompt {{
-            position: absolute !important;
-            right: 25px !important;
-            bottom: 30px !important;
-            z-index: 1000 !important;
-        }}
-        
-        .mic-in-prompt button {{
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; 
-            border: 2px solid rgba(59, 130, 246, 0.4) !important; 
-            border-radius: 50% !important;
-            width: 48px !important;
-            height: 48px !important;
-            min-width: 48px !important;
-            min-height: 48px !important;
-            padding: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5), 0 0 0 0 rgba(59, 130, 246, 0.7) !important;
-            cursor: pointer !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            animation: pulse-border 2s infinite !important;
-        }}
-        
-        @keyframes pulse-border {{
-            0%, 100% {{
-                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5), 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }}
-            50% {{
-                box-shadow: 0 4px 25px rgba(59, 130, 246, 0.6), 0 0 0 8px rgba(59, 130, 246, 0);
-            }}
-        }}
-        
-        .mic-in-prompt button:hover {{
-            transform: scale(1.15) rotate(5deg) !important;
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.7), 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
-            border-color: rgba(59, 130, 246, 0.8) !important;
-        }}
-        
-        .mic-in-prompt button:active {{
-            transform: scale(1.05) !important;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-            box-shadow: 0 2px 15px rgba(239, 68, 68, 0.8) !important;
-            border-color: rgba(239, 68, 68, 0.8) !important;
-        }}
-        
-        .mic-in-prompt button svg {{
-            width: 22px !important;
-            height: 22px !important;
-            fill: white !important;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
-        }}
-        
-        /* Radio Buttons */
-        .stRadio > div[role="radiogroup"] > label > div:first-child {{
-            background-color: #ef4444 !important; 
-            border-color: #ef4444 !important;
-        }}
-        
-        .stRadio label {{
-            color: {text_secondary} !important;
-            font-weight: 600 !important;
-        }}
-        
-        /* Tables */
-        .stTable {{
-            color: {text_primary} !important;
-        }}
-        
-        table {{
-            color: {text_primary} !important;
-        }}
-        
-        thead tr th {{
-            background-color: {bg_tertiary} !important;
-            color: {text_primary} !important;
-        }}
-        
-        tbody tr td {{
-            color: {text_primary} !important;
-        }}
-        
-        /* Metrics */
-        [data-testid="stMetricValue"] {{
-            color: #38bdf8 !important;
-            font-weight: 700 !important;
-        }}
-        
-        /* Scrollbar */
+
+        /* SCROLLBAR */
         ::-webkit-scrollbar {{ width: 12px; }}
-        ::-webkit-scrollbar-track {{ background: {bg_primary}; }}
-        ::-webkit-scrollbar-thumb {{ 
-            background: {bg_tertiary}; 
-            border-radius: 6px; 
+        ::-webkit-scrollbar-thumb {{
+            background: var(--bg-tertiary);
+            border-radius: 6px;
         }}
-        
-        /* Hide Streamlit branding */
-        footer {{visibility: hidden;}}
-        #MainMenu {{visibility: hidden;}}
-        header {{visibility: hidden;}}
-    </style>
-    """
-    st.markdown(shader_css, unsafe_allow_html=True)
+
+        /* HIDE STREAMLIT UI */
+        footer {{ visibility: hidden; }}
+        #MainMenu {{ visibility: hidden; }}
+        header {{ visibility: hidden; }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 # ------------------------------------------------------------------------------
 # SECTION 4: LEGAL CONTEXT & RESPONSE HANDLERS
@@ -1254,6 +1090,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
