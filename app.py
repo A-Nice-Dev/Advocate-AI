@@ -103,7 +103,7 @@ def apply_enhanced_shaders():
             "chat_bg": "rgba(241, 245, 249, 0.6)",
             "prompt_bg": "#ffffff",
         }
-        /* 🌗 Smooth theme transitions */
+        /* Smooth theme transitions */
     * {
         transition:
             background-color 0.35s ease,
@@ -1294,6 +1294,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
