@@ -69,41 +69,10 @@ if "sidebar_visible" not in st.session_state:
 # ------------------------------------------------------------------------------
 
 def apply_enhanced_shaders():
-    """Enhanced CSS with light/dark mode support, smooth transitions, and sidebar toggle"""
-
-    # Sync theme state
     st.session_state.theme_modfe = st.session_state.theme_mode
-
-    # ======================
-    # 🎨 COLOR SCHEMES
-    # ======================
-    if st.session_state.theme_modfe == "dark":
-        colors = {
-            "bg_primary": "#0b1120",
-            "bg_secondary": "#1a1f3a",
-            "bg_tertiary": "#1e293b",
-            "text_primary": "#e8edf4",
-            "text_secondary": "#b4bdd0",
-            "border": "rgba(56, 189, 248, 0.2)",
-            "input_bg": "rgba(30, 41, 59, 0.6)",
-            "sidebar_bg": "rgba(2, 6, 23, 0.8)",
-            "chat_bg": "rgba(30, 41, 59, 0.4)",
-            "prompt_bg": "#0a0f1a",
-        }
-    else:
-        colors = {
-            "bg_primary": "#f8fafc",
-            "bg_secondary": "#e2e8f0",
-            "bg_tertiary": "#cbd5e1",
-            "text_primary": "#0f172a",
-            "text_secondary": "#475569",
-            "border": "rgba(14, 165, 233, 0.3)",
-            "input_bg": "rgba(255, 255, 255, 0.9)",
-            "sidebar_bg": "rgba(241, 245, 249, 0.9)",
-            "chat_bg": "rgba(241, 245, 249, 0.6)",
-            "prompt_bg": "#ffffff",
-        }
-        /* Smooth theme transitions */
+    """Enhanced CSS with light/dark mode support and sidebar toggle"""
+    
+        /* 🌗 Smooth theme transitions */
     * {
         transition:
             background-color 0.35s ease,
@@ -1294,6 +1263,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
