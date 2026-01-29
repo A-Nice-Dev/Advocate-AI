@@ -55,7 +55,7 @@ st.set_page_config(
     page_title=SYSTEM_CONFIG["APP_NAME"], 
     page_icon=SYSTEM_CONFIG["APP_ICON"], 
     layout=SYSTEM_CONFIG["LAYOUT"],
-    initial_sidebar_state="auto"  # Let Streamlit handle sidebar state
+    initial_sidebar_state="expanded"  # Sidebar opens by default
 )
 
 # Initialize theme and sidebar state in session state
@@ -1242,3 +1242,4 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
