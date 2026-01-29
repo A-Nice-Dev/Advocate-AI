@@ -98,10 +98,24 @@ def apply_enhanced_shaders():
     # Add JavaScript for sidebar control - FIXED VERSION
     sidebar_script = """
     <script>
+    let sidebarVisible = true;
+
     function toggleSidebar() {
-        const collapseControl = window.parent.document.querySelector('[data-testid="collapsedControl"]');
-        if (collapseControl) {
-            collapseControl.click();
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+
+        if (!sidebar) return;
+
+        if (sidebarVisible) {
+            sidebar.style.transform = 'translateX(-105%)';
+            sidebar.style.transition = 'transform 0.3s ease';
+            if (main) main.style.marginLeft = '0px';
+            sidebarVisible = false;
+        } else {
+            sidebar.style.transform = 'translateX(0)';
+            sidebar.style.transition = 'transform 0.3s ease';
+            if (main) main.style.marginLeft = '300px';
+            sidebarVisible = true;
         }
     }
     </script>
@@ -1239,6 +1253,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
