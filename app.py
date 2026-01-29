@@ -95,7 +95,7 @@ def apply_enhanced_shaders():
         chat_bg = "rgba(241, 245, 249, 0.6)"
         prompt_area_bg = "#ffffff"
     
-    # Add JavaScript for sidebar control with better toggle functionality
+    # Add JavaScript for sidebar control - FIXED VERSION
     sidebar_script = """
     <script>
     function toggleSidebar() {
@@ -276,7 +276,7 @@ def apply_enhanced_shaders():
             font-size: 15px !important;
         }}
         
-        /* Microphone Button - INSIDE PROMPT BAR - ENHANCED */
+        /* Microphone Button - INSIDE PROMPT BAR - ENHANCED BEAUTIFUL VERSION */
         .mic-in-prompt {{
             position: absolute !important;
             right: 25px !important;
@@ -330,9 +330,6 @@ def apply_enhanced_shaders():
             height: 22px !important;
             fill: white !important;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
-        }}
-            height: 20px !important;
-            fill: white !important;
         }}
         
         /* Radio Buttons */
@@ -1242,4 +1239,19 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
