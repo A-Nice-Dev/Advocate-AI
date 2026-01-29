@@ -97,7 +97,8 @@ def apply_enhanced_shaders():
     
     # Add JavaScript for sidebar control
     # Add JavaScript for sidebar control
-   sidebar_script = """
+   sidebar_script = 
+    """
     <script>
     function toggleSidebar() {
         const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
@@ -1232,6 +1233,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
