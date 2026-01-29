@@ -97,29 +97,29 @@ def apply_enhanced_shaders():
     
     # Add JavaScript for sidebar control
     # Add JavaScript for sidebar control
-   sidebar_script = """
-    <script>
-    function toggleSidebar() {
-        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
-        const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
+    sidebar_script = """
+     <script>
+     function toggleSidebar() {
+         const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+         const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
 
-        if (!sidebar) return;
+         if (!sidebar) return;
 
-        const isHidden = sidebar.style.transform.includes('-105%');
+         const isHidden = sidebar.style.transform.includes('-105%');
 
-        if (isHidden) {
-            sidebar.style.transform = "translateX(0)";
-            sidebar.style.transition = "transform 0.3s ease";
-            if (main) main.style.marginLeft = "300px";
-        } else {
-            sidebar.style.transform = "translateX(-105%)";
-            sidebar.style.transition = "transform 0.3s ease";
-            if (main) main.style.marginLeft = "0px";
-        }
-    }
-    </script>
-    """
-    components.html(sidebar_script, height=0)
+         if (isHidden) {
+             sidebar.style.transform = "translateX(0)";
+             sidebar.style.transition = "transform 0.3s ease";
+             if (main) main.style.marginLeft = "300px";
+         } else {
+             sidebar.style.transform = "translateX(-105%)";
+             sidebar.style.transition = "transform 0.3s ease";
+             if (main) main.style.marginLeft = "0px";
+         }
+     }
+     </script>
+     """
+     components.html(sidebar_script, height=0)
 
     
     shader_css = f"""
@@ -1232,6 +1232,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
