@@ -70,7 +70,7 @@ if "sidebar_visible" not in st.session_state:
 
 def apply_enhanced_shaders():
     st.session_state.theme_modfe = st.session_state.theme_mode
-    """Enhanced CSS with light/dark mode support and sidebar toggle"""
+    # """Enhanced CSS with light/dark mode support and sidebar toggle"""
     
     # Define color schemes
     if st.session_state.theme_modfe == "dark":
@@ -1255,6 +1255,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
