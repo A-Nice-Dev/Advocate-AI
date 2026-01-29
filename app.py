@@ -95,25 +95,13 @@ def apply_enhanced_shaders():
         chat_bg = "rgba(241, 245, 249, 0.6)"
         prompt_area_bg = "#ffffff"
     
-    # Add JavaScript for sidebar control
+    # Add JavaScript for sidebar control with better toggle functionality
     sidebar_script = """
     <script>
     function toggleSidebar() {
-        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
-        const main = window.parent.document.querySelector('[data-testid="stAppViewContainer"]');
-
-        if (!sidebar) return;
-
-        const isHidden = sidebar.style.transform.includes('-105%');
-
-        if (isHidden) {
-            sidebar.style.transform = "translateX(0)";
-            sidebar.style.transition = "transform 0.3s ease";
-            if (main) main.style.marginLeft = "300px";
-        } else {
-            sidebar.style.transform = "translateX(-105%)";
-            sidebar.style.transition = "transform 0.3s ease";
-            if (main) main.style.marginLeft = "0px";
+        const collapseControl = window.parent.document.querySelector('[data-testid="collapsedControl"]');
+        if (collapseControl) {
+            collapseControl.click();
         }
     }
     </script>
@@ -288,38 +276,61 @@ def apply_enhanced_shaders():
             font-size: 15px !important;
         }}
         
-        /* Microphone Button - INSIDE PROMPT BAR */
+        /* Microphone Button - INSIDE PROMPT BAR - ENHANCED */
         .mic-in-prompt {{
             position: absolute !important;
-            right: 30px !important;
-            bottom: 35px !important;
+            right: 25px !important;
+            bottom: 30px !important;
             z-index: 1000 !important;
         }}
         
         .mic-in-prompt button {{
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; 
-            border: none !important; 
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important; 
+            border: 2px solid rgba(59, 130, 246, 0.4) !important; 
             border-radius: 50% !important;
-            width: 40px !important;
-            height: 40px !important;
-            min-width: 40px !important;
-            min-height: 40px !important;
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            min-height: 48px !important;
             padding: 0 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4) !important;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5), 0 0 0 0 rgba(59, 130, 246, 0.7) !important;
             cursor: pointer !important;
-            transition: all 0.2s ease !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            animation: pulse-border 2s infinite !important;
+        }}
+        
+        @keyframes pulse-border {{
+            0%, 100% {{
+                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5), 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }}
+            50% {{
+                box-shadow: 0 4px 25px rgba(59, 130, 246, 0.6), 0 0 0 8px rgba(59, 130, 246, 0);
+            }}
         }}
         
         .mic-in-prompt button:hover {{
-            transform: scale(1.1) !important;
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6) !important;
+            transform: scale(1.15) rotate(5deg) !important;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.7), 0 0 0 4px rgba(59, 130, 246, 0.3) !important;
+            border-color: rgba(59, 130, 246, 0.8) !important;
+        }}
+        
+        .mic-in-prompt button:active {{
+            transform: scale(1.05) !important;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            box-shadow: 0 2px 15px rgba(239, 68, 68, 0.8) !important;
+            border-color: rgba(239, 68, 68, 0.8) !important;
         }}
         
         .mic-in-prompt button svg {{
-            width: 20px !important;
+            width: 22px !important;
+            height: 22px !important;
+            fill: white !important;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+        }}
             height: 20px !important;
             fill: white !important;
         }}
@@ -534,7 +545,7 @@ def db_create_vault_user(email, name, password, provider='Local'):
         cursor.execute('''
             INSERT INTO chambers (owner_email, chamber_name, init_date) 
             VALUES (?, ?, ?)
-        ''', (email, "General Litigation Chamber", ts))
+        ''', (email, "General Consultation", ts))
         
         conn.commit()
         db_log_event(email, "REGISTRATION", f"New account provisioned via {provider}")
@@ -870,7 +881,7 @@ def render_google_sign_in():
                 cursor.execute("INSERT INTO users (email, full_name, vault_key, registration_date, provider) VALUES (?, ?, ?, ?, ?)", 
                                (g_email, g_name, "OAUTH_SECURE", ts, "Google"))
                 cursor.execute("INSERT INTO chambers (owner_email, chamber_name, init_date) VALUES (?, ?, ?)", 
-                               (g_email, "General Litigation Chamber", ts))
+                               (g_email, "General Consultation", ts))
                 conn.commit()
             conn.close()
         st.session_state.logged_in = True
@@ -934,7 +945,7 @@ def render_main_interface():
             conn.close()
             
             if not user_chambers:
-                user_chambers = ["General Litigation Chamber"]
+                user_chambers = ["General Consultation"]
                 
             st.session_state.active_ch = st.radio(
                 "Select Case", 
@@ -949,7 +960,7 @@ def render_main_interface():
                     st.session_state.show_new_case_modal = True
             with col_del:
                 if st.button("🗑️ Delete Case"):
-                    if st.session_state.active_ch != "General Litigation Chamber":
+                    if st.session_state.active_ch != "General Consultation":
                         st.session_state.show_delete_modal = True
                     else:
                         st.warning("Cannot delete default chamber")
@@ -982,7 +993,7 @@ def render_main_interface():
                     if st.button("Yes, Delete", key="confirm_delete_btn"):
                         if db_delete_chamber(st.session_state.user_email, st.session_state.active_ch):
                             st.success("✓ Case Deleted")
-                            st.session_state.active_ch = "General Litigation Chamber"
+                            st.session_state.active_ch = "General Consultation"
                             st.session_state.show_delete_modal = False
                             time.sleep(1)
                             st.rerun()
@@ -1219,7 +1230,7 @@ def render_sovereign_portal():
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "active_ch" not in st.session_state:
-    st.session_state.active_ch = "General Litigation Chamber"
+    st.session_state.active_ch = "General Consultation"
 
 handle_google_callback()
 
@@ -1231,11 +1242,3 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
-
-
-
-
-
-
-
-
