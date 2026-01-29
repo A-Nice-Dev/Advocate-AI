@@ -72,14 +72,6 @@ def apply_enhanced_shaders():
     st.session_state.theme_modfe = st.session_state.theme_mode
     """Enhanced CSS with light/dark mode support and sidebar toggle"""
     
-        /* 🌗 Smooth theme transitions */
-    * {
-        transition:
-            background-color 0.35s ease,
-            color 0.35s ease,
-            border-color 0.35s ease,
-            box-shadow 0.35s ease;
-    }
     # Define color schemes
     if st.session_state.theme_modfe == "dark":
         bg_primary = "#0b1120"
@@ -1263,6 +1255,7 @@ else:
 # ==============================================================================
 # END OF ALPHA APEX v38.1 - UPGRADED VERSION
 # ==============================================================================
+
 
 
 
